@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13  # Intel Mac - compatible with both Intel and Apple Silicon
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -27,6 +27,11 @@ jobs:
       run: |
         pyinstaller collage_maker.spec
 
+    - name: Remove Quarantine Attribute
+      run: |
+        cd dist
+        xattr -cr collage_maker.app
+        
     - name: Zip Application
       run: |
         cd dist
