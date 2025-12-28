@@ -1,0 +1,39 @@
+name: Build Mac App
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build Mac Base App
+      run: |
+        pyinstaller collage_maker.spec
+
+    - name: Zip Application
+      run: |
+        cd dist
+        zip -r collage_maker_mac.zip collage_maker.app
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MacApp-Zip
+        path: dist/collage_maker_mac.zip
