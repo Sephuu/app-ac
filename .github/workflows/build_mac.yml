@@ -32,13 +32,25 @@ jobs:
         cd dist
         xattr -cr collage_maker.app
         
-    - name: Zip Application
+    - name: Install create-dmg
       run: |
-        cd dist
-        zip -r collage_maker_mac.zip collage_maker.app
+        brew install create-dmg
+        
+    - name: Create DMG Installer
+      run: |
+        create-dmg \
+          --volname "Sephu Etiquetas" \
+          --window-pos 200 120 \
+          --window-size 600 400 \
+          --icon-size 100 \
+          --icon "collage_maker.app" 175 190 \
+          --hide-extension "collage_maker.app" \
+          --app-drop-link 425 190 \
+          "dist/EtiquetasSephu-Installer.dmg" \
+          "dist/collage_maker.app"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MacApp-Zip
-        path: dist/collage_maker_mac.zip
+        name: Mac-DMG-Installer
+        path: dist/EtiquetasSephu-Installer.dmg
